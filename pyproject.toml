@@ -1,0 +1,91 @@
+# SoftFlow Python package
+#
+# The C++ extension module `softflow_core` is built by CMake (see
+# python/CMakeLists.txt). The pure-Python wrapper package `pysoftflow`
+# lives in python/pysoftflow/.
+#
+# scikit-build-core drives the build so that `pip install -e .` invokes
+# CMake correctly and produces both the native extension and the
+# pure-Python helpers as a single editable install.
+
+[build-system]
+requires = ["scikit-build-core>=0.8", "pybind11>=2.12"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "pysoftflow"
+version = "0.3.0"
+description = "Lattice Boltzmann + immersed-boundary solver for soft particles in microchannels"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Ram Chand", email = "ram.chand@bnbwu.edu.pk" },
+]
+requires-python = ">=3.10"
+keywords = ["lattice-boltzmann", "immersed-boundary", "microfluidics", "soft-matter", "capsule", "suspension"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "h5py>=3.9",
+]
+
+[project.optional-dependencies]
+viz = ["matplotlib>=3.7"]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+    "mypy>=1.8",
+    "black>=24.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/bnbwu/softflow"
+"Bug Tracker" = "https://github.com/bnbwu/softflow/issues"
+
+# ── scikit-build-core: drive CMake from pyproject ──────────────
+[tool.scikit-build]
+cmake.version = ">=3.18"
+cmake.build-type = "Release"
+ninja.version = ">=1.10"
+wheel.packages = ["python/pysoftflow"]
+
+[tool.scikit-build.cmake.define]
+BUILD_PYTHON = "ON"
+BUILD_TESTS  = "OFF"
+USE_OPENMP   = "ON"
+
+# ── ruff: linter + formatter ───────────────────────────────────
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["build*", "**/__pycache__"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]  # handled by formatter
+
+# ── mypy: strict on the package proper, lenient on examples ───
+[tool.mypy]
+python_version = "3.10"
+strict = true
+files = ["python/pysoftflow"]
+exclude = ["build", "examples"]
+
+# ── pytest ────────────────────────────────────────────────────
+[tool.pytest.ini_options]
+testpaths = ["tests/python"]
+addopts = "-q --strict-markers"

@@ -1,0 +1,136 @@
+# =====================================================================
+# Build outputs
+# =====================================================================
+build/
+build_*/
+_skbuild/
+dist/
+*.egg-info/
+*.so
+*.dylib
+*.dll
+
+# CMake artifacts
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# =====================================================================
+# Python
+# =====================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.tox/
+htmlcov/
+.ipynb_checkpoints/
+
+# Virtual envs
+.venv/
+venv/
+env/
+.env
+
+# =====================================================================
+# Simulation output (large, regenerated)
+# =====================================================================
+output/
+vtk_*/
+**/vtk/
+**/smoke_out/
+**/data/trajectory.csv
+**/data/timeseries.csv
+**/data/concentration_*.csv
+**/data/bond_timeseries.csv
+**/data/segregation_timeseries.csv
+**/data/positions_final.csv
+**/data/bonds_final.csv
+**/data/capsule_scalar.csv
+**/data/concentration_final.*
+**/data/segregation.csv
+*.pvd
+*.vti
+*.vtp
+*.vtu
+*.vtk
+*.h5
+*.xdmf
+*.npz
+*.npy
+
+# native checkpoint format
+*.sfck
+
+# Per-run provenance + checkpoints
+**/config/run_manifest.json
+**/checkpoints/
+*.ckpt
+
+# Sweep outputs — push code, papers, figures, and small per-cell summaries;
+# block ALL bulk regenerable data (VTK lattice snapshots + .npz time series).
+# Re-running the sim regenerates them.
+#
+# Per user instruction: "dont push npz and vtk" — bulk simulation output
+# stays local. We keep small JSON manifests, CSV summaries, and figures.
+research/**/sweep_production.log
+research/**/*.log
+
+# Allow run_manifest.json (provenance) and per-cell config under research/.
+!research/**/config/
+!research/**/config/run_manifest.json
+
+# Bulk LBM VTK output is already blocked by the global *.vti/*.vtp/*.pvd
+# rules above; the global *.npz rule blocks history.npz / sweep_results.npz.
+# No unignore rules — keep the repo light.
+
+# Project 05 GNN data directories: per-cell trajectories (particle_data.csv,
+# global_stats.csv), VTK output and graph datasets — all bulk + regenerable
+# from the scripts. (The vtk_*/ rule above already blocks the vtk_* run dirs.)
+research/**/gnn_data/
+research/**/*particle_data.csv
+research/**/global_stats.csv
+
+# =====================================================================
+# Editor / OS junk
+# =====================================================================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.code-workspace
+
+# =====================================================================
+# Internal dev notes (not for public repo)
+# =====================================================================
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
+*.toc
+*.synctex.gz
+*.lof
+*.lot
+*.fdb_latexmk
+*.fls
+build1.log
+
+# Research projects — code, papers and per-cell summaries are PUBLIC.
+# Only the bulk VTK lattice output is excluded (see "Sweep outputs"
+# section above for the specific patterns).
+
+# Private research workspace (kept locally, not published)
+research/
+tests/regression/
